@@ -1,7 +1,3 @@
-/*
- * Ponto de entrada dos estilos.
- * A ordem é intencional: Tailwind, tema, base e estilos da aplicação.
- */
 @import "./tailwind.css";
 @import "./colors.css";
 @import "./reset.css";
