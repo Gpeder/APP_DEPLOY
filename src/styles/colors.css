@@ -1,0 +1,44 @@
+/* Paleta semântica do app. */
+:root {
+  --background: #09090b;
+  --foreground: #f4f4f5;
+  --primary: #fafafa;
+  --primary-foreground: #18181b;
+  --secondary: #27272a;
+  --secondary-foreground: #fafafa;
+  --accent: #27272a;
+  --accent-foreground: #fafafa;
+  --destructive: #b91c1c;
+  --border: #27272a;
+  --input: #3f3f46;
+  --ring: #a1a1aa;
+  --bg: #09090b;
+  --surface: #18181b;
+  --surface-2: #202023;
+  --text: #f4f4f5;
+  --muted: #a1a1aa;
+  --sidebar: #111114;
+  --interactive: #27272a;
+  --interactive-selected: #27272a80;
+  --neutral-soft: #3f3f463d;
+  --neutral-medium: #3f3f4652;
+  --neutral-emphasis: #e4e4e7;
+  --focus: #71717a;
+  --success: #4ade80;
+  --success-soft: #14532d3d;
+  --danger: #f87171;
+  --danger-emphasis: #dc2626;
+  --danger-text: #fca5a5;
+  --danger-border: #7f1d1d;
+  --danger-subtle: #7f1d1d12;
+  --danger-soft: #7f1d1d1f;
+  --danger-muted: #7f1d1d24;
+  --danger-medium: #7f1d1d3d;
+  --warning: #fbbf24;
+  --warning-border: #a16207;
+  --warning-soft: #78350f22;
+  --warning-medium: #78350f33;
+  --shadow: #00000066;
+  --backdrop: #00000099;
+  --modal-backdrop: #000000b3;
+}
