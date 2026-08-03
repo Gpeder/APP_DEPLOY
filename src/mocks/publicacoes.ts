@@ -1,0 +1,46 @@
+import type { ItemPublicacao } from "@/types";
+
+export const publicacoesIniciais: ItemPublicacao[] = [
+  {
+    id: "publication-1",
+    dataPublicacao: "2026-07-29",
+    nomeAplicativo: "App Cliente Pro",
+    branch: "main",
+    versao: "0.0.7",
+    status: "partial",
+    googlePlay: { habilitada: true, status: "published", progresso: 100 },
+    appStore: { habilitada: true, status: "publishing", progresso: 60 },
+  },
+  {
+    id: "publication-2",
+    dataPublicacao: "2026-07-29",
+    nomeAplicativo: "App Financeiro",
+    branch: "release",
+    versao: "2.1.0",
+    status: "waiting",
+    googlePlay: { habilitada: true, status: "waiting_queue", progresso: 0 },
+    appStore: { habilitada: true, status: "waiting_queue", progresso: 0 },
+    simularFalhaAppStore: true,
+  },
+  {
+    id: "publication-3",
+    dataPublicacao: "2026-07-29",
+    nomeAplicativo: "Portal Cliente Delta",
+    branch: "release/delta",
+    versao: "2.4.1",
+    status: "waiting",
+    googlePlay: { habilitada: true, status: "waiting_queue", progresso: 0 },
+    appStore: { habilitada: true, status: "waiting_queue", progresso: 0 },
+  },
+  {
+    id: "publication-4",
+    dataPublicacao: "2026-07-29",
+    nomeAplicativo: "Vendas Ômega",
+    branch: "main",
+    versao: "3.1.0",
+    prioridade: true,
+    status: "waiting",
+    googlePlay: { habilitada: true, status: "waiting_queue", progresso: 0 },
+    appStore: { habilitada: true, status: "waiting_queue", progresso: 0 },
+  },
+];

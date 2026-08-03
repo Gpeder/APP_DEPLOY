@@ -1,3 +1,5 @@
+/* Estrutura principal e navegação */
+
 .shell {
   display: grid;
   min-height: 100vh;
@@ -185,6 +187,8 @@
 .sidebar-backdrop {
   display: none;
 }
+
+/* Componentes compartilhados */
 
 .page-header {
   display: flex;
@@ -408,6 +412,8 @@ input[type="checkbox"] {
 .search input::placeholder {
   color: var(--focus);
 }
+
+/* Fila de publicação */
 
 .queue-banner {
   display: flex;
@@ -669,6 +675,8 @@ input[type="checkbox"] {
   font-size: 8px;
 }
 
+/* Histórico */
+
 .history-date-panel {
   margin-bottom: 12px;
   padding: 16px;
@@ -809,6 +817,8 @@ input[type="checkbox"] {
   border-radius: 7px;
   font-size: 9px;
 }
+
+/* Nova publicação */
 
 .new-publication-layout {
   display: flex;
@@ -955,6 +965,8 @@ input[type="checkbox"] {
   padding-bottom: 24px;
 }
 
+/* Configurações */
+
 .settings-sections {
   display: flex;
   max-width: 900px;
@@ -1048,6 +1060,8 @@ input[type="checkbox"] {
   color: var(--success);
   font-size: 9px;
 }
+
+/* Aplicativos */
 
 .apps-panel {
   display: block;
@@ -1180,6 +1194,8 @@ input[type="checkbox"] {
   line-height: 1.45;
 }
 
+/* Modais e estados de retorno */
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -1265,6 +1281,8 @@ input[type="checkbox"] {
   color: var(--muted);
   font-size: 11px;
 }
+
+/* Responsividade */
 
 @media (max-width: 860px) {
   .shell,
