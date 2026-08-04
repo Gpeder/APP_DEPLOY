@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum RepositoryProvider {
+  GITHUB
+  GITLAB
+}
+
+enum PublicationStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+enum ApplicationPublicationStatus {
+  PENDING
+  BUILDING
+  PUBLISHING
+  COMPLETED
+  FAILED
+  CANCELLED
+}
+
+model Application {
+  id                 Int                      @id @default(autoincrement())
+  name               String
+  repositoryProvider RepositoryProvider
+  repositoryUrl      String
+  branch             String
+  active             Boolean                  @default(true)
+  configurationValid Boolean                  @default(false)
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  publications       ApplicationPublication[]
+
+  @@map("applications")
+}
+
+model Publication {
+  id           Int                      @id @default(autoincrement())
+  publishDate  DateTime
+  status       PublicationStatus        @default(PENDING)
+  createdAt    DateTime                 @default(now())
+  updatedAt    DateTime                 @updatedAt
+  applications ApplicationPublication[]
+
+  @@map("publications")
+}
+
+model ApplicationPublication {
+  id             Int                          @id @default(autoincrement())
+  publicationId  Int
+  applicationId  Int
+  branch         String
+  androidVersion String?
+  iosVersion     String?
+  status         ApplicationPublicationStatus @default(PENDING)
+  queuePosition  Int
+  errorMessage   String?
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  createdAt      DateTime                     @default(now())
+  updatedAt      DateTime                     @updatedAt
+  publication    Publication                  @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  application    Application                  @relation(fields: [applicationId], references: [id])
+
+  @@unique([publicationId, applicationId])
+  @@unique([publicationId, queuePosition])
+  @@map("application_publications")
+}
