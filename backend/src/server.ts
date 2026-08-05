@@ -14,6 +14,13 @@ async function iniciarServidor() {
       await app?.close();
     };
 
+    app.get("/saude", async () => {
+      return {
+        status: "ok",
+        banco: "conectado",
+      };
+    });
+
     const tratarSinal = (sinal: NodeJS.Signals) => {
       void encerrar(sinal).catch((error: unknown) => {
         app?.log.error({ err: error, sinal }, "Falha ao encerrar o servidor.");
