@@ -19,8 +19,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePaginaAplicativos } from "@/features/aplicativos/use-pagina-aplicativos";
-import { repositoriosDisponiveis } from "@/mocks/repositorios";
-import type { ItemAplicativo, StatusAplicativo } from "@/types";
+import type { Aplicativo, StatusAplicativo } from "@/types";
 import {
   CheckCircle2,
   Ellipsis,
@@ -41,6 +40,11 @@ function nomeRepositorio(url: string) {
   return url
     .replace("https://github.com/", "")
     .replace("https://gitlab.com/", "");
+}
+
+function obterStatus(aplicativo: Aplicativo): StatusAplicativo {
+  if (!aplicativo.active) return "inactive";
+  return aplicativo.configurationValid ? "ready" : "problem";
 }
 
 export function Aplicativos() {
@@ -73,19 +77,45 @@ export function Aplicativos() {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {paginaAplicativos.carregando && (
+              <TableRow>
+                <TableCell colSpan={5}>Carregando aplicativos...</TableCell>
+              </TableRow>
+            )}
+
+            {!paginaAplicativos.carregando &&
+              paginaAplicativos.falhaCarregamento && (
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    Não foi possível carregar os aplicativos. Tente novamente
+                    mais tarde.
+                  </TableCell>
+                </TableRow>
+              )}
+
+            {!paginaAplicativos.carregando &&
+              !paginaAplicativos.falhaCarregamento &&
+              paginaAplicativos.aplicativos.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={5}>
+                    Nenhum aplicativo cadastrado.
+                  </TableCell>
+                </TableRow>
+              )}
+
             {paginaAplicativos.aplicativos.map((aplicativo) => (
               <TableRow key={aplicativo.id}>
                 <TableCell>
-                  <strong>{aplicativo.nome}</strong>
+                  <strong>{aplicativo.name}</strong>
                 </TableCell>
                 <TableCell>
                   <a
                     className="repository-link"
-                    href={aplicativo.urlRepositorio}
+                    href={aplicativo.repositoryUrl}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {nomeRepositorio(aplicativo.urlRepositorio)}
+                    {nomeRepositorio(aplicativo.repositoryUrl)}
                   </a>
                 </TableCell>
                 <TableCell>
@@ -93,15 +123,21 @@ export function Aplicativos() {
                 </TableCell>
                 <TableCell>
                   <span
-                    className={`app-status app-status-${aplicativo.status}`}
+                    className={`app-status app-status-${obterStatus(aplicativo)}`}
                   >
-                    {rotulosStatus[aplicativo.status]}
+                    {rotulosStatus[obterStatus(aplicativo)]}
                   </span>
                 </TableCell>
                 <TableCell className="apps-actions-cell">
                   <AcoesAplicativo
                     aplicativo={aplicativo}
-                    testado={paginaAplicativos.idTestado === aplicativo.id}
+                    testado={
+                      paginaAplicativos.idTestado === aplicativo.id ||
+                      aplicativo.configurationValid
+                    }
+                    alterandoStatus={paginaAplicativos.idsAlterandoStatus.has(
+                      aplicativo.id,
+                    )}
                     aoEditar={paginaAplicativos.abrirEdicao}
                     aoAlternar={paginaAplicativos.alternarAplicativo}
                     aoTestar={paginaAplicativos.testarConfiguracao}
@@ -152,11 +188,13 @@ export function Aplicativos() {
                   }
                 >
                   <option value="">Selecione um repositório</option>
-                  {repositoriosDisponiveis.map((repositorio) => (
+                  {paginaAplicativos.repositoriosFormulario.map(
+                    (repositorio) => (
                     <option value={repositorio.url} key={repositorio.url}>
                       {repositorio.provedor} · {repositorio.nome}
                     </option>
-                  ))}
+                    ),
+                  )}
                 </select>
               </label>
 
@@ -190,6 +228,7 @@ export function Aplicativos() {
               <Button
                 type="button"
                 variant="secondary"
+                disabled={paginaAplicativos.salvando}
                 onClick={paginaAplicativos.fecharDialogo}
               >
                 Cancelar
@@ -199,7 +238,9 @@ export function Aplicativos() {
                 disabled={!paginaAplicativos.podeSalvar}
                 onClick={paginaAplicativos.salvarAplicativo}
               >
-                Salvar aplicativo
+                {paginaAplicativos.salvando
+                  ? "Salvando..."
+                  : "Salvar aplicativo"}
               </Button>
             </div>
           </>
@@ -212,21 +253,23 @@ export function Aplicativos() {
 function AcoesAplicativo({
   aplicativo,
   testado,
+  alterandoStatus,
   aoEditar,
   aoAlternar,
   aoTestar,
 }: {
-  aplicativo: ItemAplicativo;
+  aplicativo: Aplicativo;
   testado: boolean;
-  aoEditar: (aplicativo: ItemAplicativo) => void;
-  aoAlternar: (aplicativo: ItemAplicativo) => void;
-  aoTestar: (aplicativo: ItemAplicativo) => void;
+  alterandoStatus: boolean;
+  aoEditar: (aplicativo: Aplicativo) => void;
+  aoAlternar: (aplicativo: Aplicativo) => void;
+  aoTestar: (aplicativo: Aplicativo) => void;
 }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className="app-actions-trigger"
-        aria-label={`Abrir ações de ${aplicativo.nome}`}
+        aria-label={`Abrir ações de ${aplicativo.name}`}
       >
         <Ellipsis size={18} />
       </DropdownMenuTrigger>
@@ -235,9 +278,16 @@ function AcoesAplicativo({
           <Pencil />
           Editar
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => aoAlternar(aplicativo)}>
-          {aplicativo.ativo ? <PowerOff /> : <Power />}
-          {aplicativo.ativo ? "Desativar" : "Ativar"}
+        <DropdownMenuItem
+          disabled={alterandoStatus}
+          onSelect={() => aoAlternar(aplicativo)}
+        >
+          {aplicativo.active ? <PowerOff /> : <Power />}
+          {alterandoStatus
+            ? "Atualizando..."
+            : aplicativo.active
+              ? "Desativar"
+              : "Ativar"}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onSelect={() => aoTestar(aplicativo)}>

@@ -1,4 +1,5 @@
 export type StatusAplicativo = "ready" | "inactive" | "problem";
+export type RepositoryProvider = "GITHUB" | "GITLAB";
 export type StatusHistorico = "success" | "failed";
 
 export type StatusPlataformaPublicacao =
@@ -38,6 +39,34 @@ export interface ItemAplicativo {
   versaoLoja: string;
   versaoCommitada: string;
 }
+
+export interface Aplicativo {
+  id: number;
+  name: string;
+  repositoryProvider: RepositoryProvider;
+  repositoryUrl: string;
+  branch: string;
+  active: boolean;
+  configurationValid: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type DadosCriacaoAplicativo = Pick<
+  Aplicativo,
+  "name" | "repositoryProvider" | "repositoryUrl" | "branch"
+> &
+  Partial<Pick<Aplicativo, "active" | "configurationValid">>;
+
+export type DadosAtualizacaoAplicativo = Pick<
+  Aplicativo,
+  | "name"
+  | "repositoryProvider"
+  | "repositoryUrl"
+  | "branch"
+  | "active"
+  | "configurationValid"
+>;
 
 export interface PublicacaoHistorica {
   id: string;
