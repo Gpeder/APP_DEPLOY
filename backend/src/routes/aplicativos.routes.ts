@@ -19,7 +19,7 @@ import {
 
 export async function rotasAplicativos(app: FastifyInstance) {
   app.post<{ Body: CorpoCriacaoAplicativo }>(
-    "/applications",
+    "/aplicativos",
     {
       schema: {
         body: schemaCriacaoAplicativo,
@@ -28,10 +28,10 @@ export async function rotasAplicativos(app: FastifyInstance) {
     cadastrarAplicativo,
   );
 
-  app.get("/applications", consultarAplicativos);
+  app.get("/aplicativos", consultarAplicativos);
 
   app.get<{ Params: ParametrosIdAplicativo }>(
-    "/applications/:id",
+    "/aplicativos/:id",
     {
       schema: {
         params: schemaParametrosIdAplicativo,
@@ -44,7 +44,7 @@ export async function rotasAplicativos(app: FastifyInstance) {
     Params: ParametrosIdAplicativo;
     Body: CorpoAtualizacaoAplicativo;
   }>(
-    "/applications/:id",
+    "/aplicativos/:id",
     {
       schema: {
         params: schemaParametrosIdAplicativo,
@@ -58,7 +58,7 @@ export async function rotasAplicativos(app: FastifyInstance) {
     Params: ParametrosIdAplicativo;
     Body: CorpoStatusAplicativo;
   }>(
-    "/applications/:id/status",
+    "/aplicativos/:id/status",
     {
       schema: {
         params: schemaParametrosIdAplicativo,
